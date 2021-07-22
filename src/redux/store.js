@@ -1,10 +1,11 @@
 import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger'; // catches actions and console.logs them (good for debugging)
 import { persistStore } from 'redux-persist'; // lets the browser cash the store
+import thunk from 'redux-thunk';
 
 import rootReducer from './root-reducer';
 
-const middlewares = []; // an Array of "console.logs"
+const middlewares = [thunk]; // an Array of "console.logs"
 
 if (process.env.NODE_ENV === 'development') {
 	middlewares.push(logger);	// middlewate "loger" will not be in included production build
