@@ -24,7 +24,7 @@ const SignIn = () => {
 
 	const handleChange = e => {
 		const { value, name } = e.target;
-		setCredentials({...credentials, [name]: value }); // t.i. if password: parword value; if email: email.value
+		setCredentials({...credentials, [name]: value }); // t.i. if password: password value; if email: email.value
 	};
 
 	return (
