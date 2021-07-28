@@ -29,15 +29,6 @@ const CartDropdown = ({ cartItems, history, dispatch }) => (
 	</div>
 );
 
-// const mapStateToProps = ({ cart: { cartItems } }) => ({
-//   	cartItems
-// });
-
-// better version (makes sure to rerender only when cart state changes):
-// const mapStateToProps = state => ({
-// 	cartItems: selectCartItems(state)
-// });
-// even better version:
 const mapStateToProps = createStructuredSelector({
 	cartItems: selectCartItems
 });

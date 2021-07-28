@@ -1,14 +1,7 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
-// import './App.css';
-
-// import HomePage from './pages/homepage/homepage.component';
-// import ShopPage from './pages/shop/shop.component';
-// import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-// import CheckoutPage from './pages/checkout/checkout.component';
 
 import Header from './components/header/header.component';
 import Spinner from './components/spinner/spinner.component';
@@ -26,67 +19,68 @@ const ShopPage = lazy(() => import('./pages/shop/shop.component'));
 const SignInAndSignUpPage = lazy(() => import('./pages/sign-in-and-sign-up/sign-in-and-sign-up.component'));
 const CheckoutPage = lazy(() => import('./pages/checkout/checkout.component'));
 
-const App = ({ setCurrentUser, currentUser }) => {
+class App extends React.Component {
+  	unsubscribeFromAuth = null;
 
-	useEffect(() => {
-		const unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+	componentDidMount() {
+		const { setCurrentUser } = this.props;
+
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
 			if (userAuth) {
 				const userRef = await createUserProfileDocument(userAuth);
 
 				userRef.onSnapshot(snapShot => {
 					setCurrentUser({
-							id: snapShot.id,
-							...snapShot.data()
-						}
-					);
+						id: snapShot.id,
+						...snapShot.data()
+					});
 				});
 			}
-			setCurrentUser(userAuth)
-		});
 
-		return () => {
-			unsubscribeFromAuth();
-		};
-	}, [setCurrentUser]);
-		
-	return (
-		<div>
-			<GlobalStyle />
-			<Header />
-			<Switch>
-				<ErrorBoundary>
-					<Suspense fallback={<Spinner />}> {/* adds async to React Lazy loading */}
-						<Route exact path='/' component={HomePage} />
-						<Route path='/shop' component={ShopPage} />
-						<Route exact path='/checkout' component={CheckoutPage} />
-						<Route 
-							exact 
-							path='/signin' 
-							render={() => 
-								currentUser ? (
+			setCurrentUser(userAuth);
+		});
+	}
+
+	componentWillUnmount() {
+		this.unsubscribeFromAuth();
+	}
+
+  	render() {
+		return (
+			<div>
+				<GlobalStyle />
+				<Header />
+				<Switch>
+					<ErrorBoundary>
+						<Suspense fallback={<Spinner />}> {/* adds async to React Lazy loading */}
+							<Route exact path='/' component={HomePage} />
+							<Route path='/shop' component={ShopPage} />
+							<Route exact path='/checkout' component={CheckoutPage} />
+							<Route
+								exact
+								path='/signin'
+								render={() =>
+								this.props.currentUser ? (
 									<Redirect to='/' />
-								) : ( 
-									<SignInAndSignUpPage />
-								) 
-							}
-						/>
-					</Suspense>
-				</ErrorBoundary>
-			</Switch>
-		</div>
-	);
+								) : (
+										<SignInAndSignUpPage />
+									)
+								}
+							/>
+						</Suspense>
+					</ErrorBoundary>
+				</Switch>
+			</div>
+		);
+	}
 }
 
 const mapStateToProps = createStructuredSelector({
-	currentUser: selectCurrentUser
+  	currentUser: selectCurrentUser
 });
-// the same as above:
-// const mapStateToProps = ({ user }) => ({
-// 	currentUser: user.currentUser
-// });
 
 const mapDispatchToProps = dispatch => ({
-	setCurrentUser: user => dispatch(setCurrentUser(user))
+  	setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

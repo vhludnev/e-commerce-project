@@ -58,6 +58,6 @@ const SignIn = () => {
 			</form>
 		</div>
 	);
-}
+};
 
 export default SignIn;

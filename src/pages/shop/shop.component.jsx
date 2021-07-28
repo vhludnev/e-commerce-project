@@ -9,17 +9,7 @@ import Spinner from '../../components/spinner/spinner.component';
 
 import { selectIsCollectionFetching, selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors';
 
-//import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils.js';
-
-//import { updateCollections } from '../../redux/shop/shop.actions';
-
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
-
-//import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-//import CollectionPage from '../collection/collection.component';
-
-// const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
-// const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 const CollectionsOverviewWithSpinner = WithSpinner(lazy(() => import('../../components/collections-overview/collections-overview.component')));
 
@@ -58,8 +48,6 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const mapDispatchToProps = dispatch => ({
-	//updateCollections: collectionsMap =>
-	//	dispatch(updateCollections(collectionsMap))
 	fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
 });
 
